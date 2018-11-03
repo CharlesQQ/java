@@ -16,9 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -43,6 +46,7 @@ public class ItemController {
 		mav.addObject("itemList", itemList);
 		// mav.setViewName("/WEB-INF/jsp/itemList.jsp");
 		mav.setViewName("itemList");
+		System.out.println("ItemController.itemList.....");
 		return mav;
 	}
 	
@@ -182,5 +186,27 @@ public class ItemController {
 		PrintWriter printWriter = response.getWriter();
 		
 		printWriter.println("这个是response打印的消息");
+	}
+	
+	@RequestMapping("getItem")
+	@ResponseBody
+	public Item getItem(@RequestBody Item itemIn){
+		//Item item = itemService.getItemById(1);
+		System.out.println(itemIn);
+		itemIn.setName("charles");
+		return itemIn;
+		
+	}
+	/**
+	 * restful 风格演示
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("item/{id}")
+	public String itemQuery(@PathVariable("id") Integer ids, Model model){
+		Item item = itemService.getItemById(ids);
+		
+		model.addAttribute("item", item);
+		return "itemEdit";
 	}
 }
